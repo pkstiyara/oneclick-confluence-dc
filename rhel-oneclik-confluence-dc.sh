@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Define color escape codes
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
@@ -53,8 +52,6 @@ install_fontconfig() {
 # Install Fontconfig if not already installed
 check_fontconfig
 
-
-
 # Function to check if Java is installed
 check_java() {
     if java -version &> /dev/null; then
@@ -72,19 +69,25 @@ install_java() {
     sudo tar -xvzf openjdk-17.0.1_linux-x64_bin.tar.gz
     echo -e '\nexport JAVA_HOME=/opt/jdk-17.0.1\nexport PATH=$PATH:$JAVA_HOME/bin' | sudo tee -a /etc/profile
     source /etc/profile
+}
 
 # Install Java if not already installed
 check_java
 
 # Confluence Installation Directory
-
 cd /mnt
 
-# Take the latest insataller version of Confluence
+# Take the latest installer version of Confluence
 
-####################### User Input for COnfluence Version ############################
+####################### User Input for Confluence Version ############################
 
-read -p "Enter the Confluece Version -> " CONFLUENCE_VERSION
+read -p "Enter the Confluence Version -> " CONFLUENCE_VERSION
+
+# Validate user input
+if [[ -z "$CONFLUENCE_VERSION" ]]; then
+    echo "Error: Confluence Version cannot be empty. Exiting."
+    exit 1
+fi
 
 ################ Download the Confluence Installer ##################################
 
@@ -92,13 +95,13 @@ wget https://www.atlassian.com/software/confluence/downloads/binary/atlassian-co
 
 sudo chmod +x atlassian-confluence-${CONFLUENCE_VERSION}-x64.bin
 
-sh -x atlassian-confluence-{CONFLUENCE_VERSION}-x64.bin << EOF
+# Uncomment and use if needed
+sh -x atlassian-confluence-${CONFLUENCE_VERSION}-x64.bin << EOF
 o
 1
 i
 n
 EOF
 
-# stop the Firewalld Service
-
+# Stop the Firewalld Service
 systemctl stop firewalld.service

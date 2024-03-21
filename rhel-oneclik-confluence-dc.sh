@@ -1,5 +1,6 @@
 !/bin/bash
 
+
 # Define color escape codes
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
@@ -22,13 +23,17 @@ echo ""
 echo "Please provide your Confluence Instance details."
 echo ""
 
-# End of script
-echo "End of script"
+# See the available Confluence DC Version
+echo "_____https://www.atlassian.com/software/confluence/download-archives________"
+
+sleep 10
+
+echo "Checking the required dependencies and installing the dependencies"
 
 # Install dependencies
 echo -e "${CYAN}Installing dependencies...${NC}"
 sudo yum update -y
-sudo yum install -y wget vim 
+sudo yum install -y wget vim
 
 # Function to check if Fontconfig is installed
 check_fontconfig() {
@@ -67,28 +72,33 @@ install_java() {
     sudo tar -xvzf openjdk-17.0.1_linux-x64_bin.tar.gz
     echo -e '\nexport JAVA_HOME=/opt/jdk-17.0.1\nexport PATH=$PATH:$JAVA_HOME/bin' | sudo tee -a /etc/profile
     source /etc/profile
-}
 
 # Install Java if not already installed
 check_java
 
-# Confluence Installation Directory 
+# Confluence Installation Directory
 
 cd /mnt
 
-# Take the latest insataller version of Confluence 
+# Take the latest insataller version of Confluence
 
-wget https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-8.5.7-x64.bin
+####################### User Input for COnfluence Version ############################
 
-sudo chmod +x atlassian-confluence-8.5.7-x64.bin
+read -p "Enter the Confluece Version -> " CONFLUENCE_VERSION
 
-sh -x atlassian-confluence-8.5.7-x64.bin << EOF
+################ Download the Confluence Installer ##################################
+
+wget https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONFLUENCE_VERSION}-x64.bin
+
+sudo chmod +x atlassian-confluence-${CONFLUENCE_VERSION}-x64.bin
+
+sh -x atlassian-confluence-{CONFLUENCE_VERSION}-x64.bin << EOF
 o
 1
 i
 n
 EOF
 
-# stop the Firewalld Service 
+# stop the Firewalld Service
 
 systemctl stop firewalld.service
